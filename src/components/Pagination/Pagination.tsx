@@ -36,18 +36,6 @@ export const Pagination: React.FC<PaginationProps> = ({
     onPageChange(page);
   };
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!isFirst) {
-      goTo(currentPage - 1);
-    }
-  };
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    goTo(currentPage + 1);
-  };
-
   return (
     <ul className="pagination">
       <li className={`page-item ${isFirst ? 'disabled' : ''}`}>
@@ -56,7 +44,10 @@ export const Pagination: React.FC<PaginationProps> = ({
           className="page-link"
           href="#prev"
           aria-disabled={isFirst}
-          onClick={handlePrev}
+          onClick={e => {
+            e.preventDefault();
+            goTo(currentPage - 1);
+          }}
         >
           «
         </a>
@@ -87,7 +78,10 @@ export const Pagination: React.FC<PaginationProps> = ({
           className="page-link"
           href="#next"
           aria-disabled={isLast}
-          onClick={handleNext}
+          onClick={e => {
+            e.preventDefault();
+            goTo(currentPage + 1);
+          }}
         >
           »
         </a>
