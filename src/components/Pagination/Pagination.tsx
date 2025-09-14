@@ -13,14 +13,23 @@ export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   onPageChange,
 }) => {
-  const pagesCount = Math.max(1, Math.ceil(total / perPage));
-  const isFirst = currentPage === 1;
-  const isLast = currentPage === pagesCount;
+  const pagesCount = Math.ceil(total / perPage);
+  const hasPages = pagesCount > 0;
+  const isFirst = !hasPages || currentPage === 1;
+  const isLast = !hasPages || currentPage === pagesCount;
 
   const pages: number[] = Array.from({ length: pagesCount }, (_, i) => i + 1);
 
   const goTo = (page: number) => {
-    if (page < 1 || page > pagesCount || page === currentPage) {
+    if (!hasPages) {
+      return;
+    }
+
+    if (page < 1 || page > pagesCount) {
+      return;
+    }
+
+    if (page === currentPage) {
       return;
     }
 
@@ -36,20 +45,17 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   const handleNext = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!isLast) {
-      goTo(currentPage + 1);
-    }
+    goTo(currentPage + 1);
   };
 
   return (
     <ul className="pagination">
-      {/* Prev */}
       <li className={`page-item ${isFirst ? 'disabled' : ''}`}>
         <a
           data-cy="prevLink"
           className="page-link"
           href="#prev"
-          aria-disabled={isFirst ? 'true' : 'false'}
+          aria-disabled={isFirst}
           onClick={handlePrev}
         >
           «
@@ -80,7 +86,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           data-cy="nextLink"
           className="page-link"
           href="#next"
-          aria-disabled={isLast ? 'true' : 'false'}
+          aria-disabled={isLast}
           onClick={handleNext}
         >
           »
