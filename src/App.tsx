@@ -5,11 +5,11 @@ import { Pagination } from './components/Pagination';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const items = getNumbers(1, 42).map(n => `Item ${n}`);
-const total = items.length;
 
 export const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(5);
+  const total = items.length;
 
   const start = (currentPage - 1) * perPage;
   const end = Math.min(start + perPage, total);
@@ -25,7 +25,7 @@ export const App: React.FC = () => {
       <h1>Items with Pagination</h1>
 
       <p className="lead" data-cy="info">
-        {`Page ${currentPage} (items ${start + 1} - ${end} of ${total})`}
+        {`Page ${currentPage} (items ${total === 0 ? 0 : start + 1} - ${end} of ${total})`}
       </p>
 
       <div className="form-group row">
@@ -37,10 +37,11 @@ export const App: React.FC = () => {
             value={perPage}
             onChange={handlePerPageChange}
           >
-            <option value="3">3</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
+            {[3, 5, 10, 20].map(n => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -53,12 +54,11 @@ export const App: React.FC = () => {
         total={total}
         perPage={perPage}
         currentPage={currentPage}
-        onPageChange={page => setCurrentPage(page)}
+        onPageChange={setCurrentPage}
       />
       <ul>
         {visibleItems.map(item => (
           <li key={item} data-cy="item">
-            {' '}
             {item}
           </li>
         ))}
